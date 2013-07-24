@@ -20,6 +20,8 @@ var_dump($couch->fetchDocByKey('car_by_uuid', $uuid));
 var_dump($couch->fetchDocstateByKey('car_by_uuid', $uuid));
 var_dump($couch->fetchValueByKey('car_by_uuid', $uuid));
 var_dump($couch->fetchIdByKey('car_by_uuid', $uuid));
+var_dump($couch->fetchObjectByKey('car_by_uuid', $uuid));
+var_dump($couch->fetchJsonByKey('car_by_uuid', $uuid));
 var_dump($couch->isDuplicate('car_by_owner', $car->owner));
 
 $car = $couch->fetch($uuid);

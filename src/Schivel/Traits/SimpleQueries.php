@@ -4,6 +4,9 @@ namespace Schivel\Traits;
 
 trait SimpleQueries
 {
+	private $pagenum;
+	private $limit;
+
 	public function fetchIdByKey($view, $key){
 		$result = $this->simpleQuery([
 			'view'=>$view,
@@ -130,34 +133,46 @@ trait SimpleQueries
 	}
 
 	private function simpleQuery($params){
-		$opts = array(
-			'blacklist'=>array('__phreezer_hash')
-		);
-		switch($params['format']){
-			case 'thaw':
-				$opts['thaw'] = true;
-				break;
-			case 'json':
-				$opts['json'] = true;
-				break;
-			default:
-				$opts['filter'] = $params['filter'];
-				break;
-		}
-		$query = array(
+		$query = $this->setQuery(array(
 			'key'=>json_encode($params['key'])
-		);
+		), $params);
 		if(isset($params['include_docs'])){
 			$query['include_docs'] = $params['include_docs'];
 		}
 		$result = $this->db->_view->query($params['view'], array(
 			'query'=>$query,
-			'opts'=>$opts
+			'opts'=>$this->setOptions($params)
 		));
+		$this->pagenum = null;
+		$this->limit = null;
 		return is_string($result) ? $result : (empty($result['rows']) ? $result : $result['rows']);
 	}
 
 	private function simpleMultiQuery($params){
+		$query = $this->setQuery(array(
+			'keys'=>json_encode($params['keys'])
+		),$params);
+		$result = $this->db->_view->query($params['view'], array(
+			'query'=>$query,
+			'opts'=>$this->setOptions($params)
+		));
+		$this->pagenum = null;
+		$this->limit = null;
+		return is_string($result) ? $result : (empty($result['rows']) ? $result : $result['rows']);
+	}
+
+	private function setQuery($query, $params){
+		if(isset($params['include_docs'])){
+			$query['include_docs'] = $params['include_docs'];
+		}
+		if(!empty($this->pagenum) && !empty($this->limit)){
+			$query['skip'] = abs(($this->pagenum - 1) * $this->limit);
+			$query['limit'] = abs($this->limit);
+		}
+		return $query;
+	}
+
+	private function setOptions($params){
 		$opts = array(
 			'blacklist'=>array('__phreezer_hash')
 		);
@@ -172,16 +187,12 @@ trait SimpleQueries
 				$opts['filter'] = $params['filter'];
 				break;
 		}
-		$query = array(
-			'keys'=>json_encode($params['keys'])
-		);
-		if(isset($params['include_docs'])){
-			$query['include_docs'] = $params['include_docs'];
-		}
-		$result = $this->db->_view->query($params['view'], array(
-			'query'=>$query,
-			'opts'=>$opts
-		));
-		return is_string($result) ? $result : (empty($result['rows']) ? $result : $result['rows']);
+		return $opts;
+	}
+
+	public function page($pagenum, $limit){
+		$this->pagenum = (int)$pagenum;
+		$this->limit = (int)$limit;
+		return $this;
 	}
 }

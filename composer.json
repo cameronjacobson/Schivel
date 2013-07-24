@@ -1,0 +1,18 @@
+{
+	"name":"schivel/schivel",
+    "repositories": [
+        {  
+            "type":"git",
+            "url":"https://github.com/cameronjacobson/Phreezer.git"
+        }
+    ],
+    "require": {
+        "phixd/phixd": "@dev",
+        "phreezer/phreezer": "@dev"
+    },
+	"autoload": {
+		"psr-0": {
+			"Schivel": "src/"
+		}
+	}
+}

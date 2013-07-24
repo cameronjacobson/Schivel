@@ -182,6 +182,6 @@ trait SimpleQueries
 			'query'=>$query,
 			'opts'=>$opts
 		));
-		return is_string($result) ? $result : $result['rows'];
+		return is_string($result) ? $result : (empty($result['rows']) ? $result : $result['rows']);
 	}
 }

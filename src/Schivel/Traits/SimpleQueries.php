@@ -143,8 +143,7 @@ trait SimpleQueries
 			'query'=>$query,
 			'opts'=>$this->setOptions($params)
 		));
-		$this->pagenum = null;
-		$this->limit = null;
+		$this->cleanUp();
 		return is_string($result) ? $result : (empty($result['rows']) ? $result : $result['rows']);
 	}
 
@@ -156,9 +155,13 @@ trait SimpleQueries
 			'query'=>$query,
 			'opts'=>$this->setOptions($params)
 		));
+		$this->cleanUp();
+		return is_string($result) ? $result : (empty($result['rows']) ? $result : $result['rows']);
+	}
+
+	private function cleanUp(){
 		$this->pagenum = null;
 		$this->limit = null;
-		return is_string($result) ? $result : (empty($result['rows']) ? $result : $result['rows']);
 	}
 
 	private function setQuery($query, $params){

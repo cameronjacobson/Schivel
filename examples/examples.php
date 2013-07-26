@@ -23,6 +23,12 @@ $car2->owner = 'me';
 
 $uuid2 = $couch->store($car2);
 
+echo <<<HEADER
+BY KEY EXAMPLES
+--------------------------------
+
+HEADER;
+
 var_dump($couch->fetchDocByKey('car_by_uuid', $uuid));
 var_dump($couch->fetchDocstateByKey('car_by_uuid', $uuid));
 var_dump($couch->fetchValueByKey('car_by_uuid', $uuid));
@@ -33,6 +39,25 @@ var_dump($couch->isDuplicate('car_by_owner', $car->owner));
 
 var_dump($couch->page(1,1)->fetchDocstateByKey('car_by_owner', $car->owner));
 var_dump($couch->page(2,1)->fetchDocstateByKey('car_by_owner', $car->owner));
+
+
+echo <<<HEADER
+BY KEYS EXAMPLES
+--------------------------------
+
+HEADER;
+
+var_dump($couch->fetchDocByKeys('car_by_uuid', [$uuid]));
+var_dump($couch->fetchDocstateByKeys('car_by_uuid', [$uuid]));
+var_dump($couch->fetchValueByKeys('car_by_uuid', [$uuid]));
+var_dump($couch->fetchIdByKeys('car_by_uuid', [$uuid]));
+var_dump($couch->fetchObjectByKeys('car_by_uuid', [$uuid]));
+var_dump($couch->fetchJsonByKeys('car_by_uuid', [$uuid]));
+
+var_dump($couch->page(1,1)->fetchDocstateByKeys('car_by_owner', [$car->owner]));
+var_dump($couch->page(2,1)->fetchDocstateByKeys('car_by_owner', [$car->owner]));
+
+
 
 $car->_delete = true;
 $couch->store($car);

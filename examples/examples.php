@@ -6,7 +6,7 @@ use Schivel\Schivel;
 use Phreezer\Storage\CouchDB;
 
 $couch = new Schivel(new CouchDB([
-	'database'=>'test'
+	'database'=>'schivel_test'
 ]));
 
 $car = new car();
@@ -79,11 +79,21 @@ var_dump($couch->page(2,1)->fetchDocstateByRange('car_by_owner', $car->owner, $c
 var_dump($couch->page(1,2)->fetchDocstateByRange('car_by_owner', $car->owner, $car->owner));
 
 
+var_dump($couch
+		->page(1,2)
+		->desc()
+		->fetchDocstateByRange('car_by_owner', $car->owner, $car->owner));
 
-$car->_delete = true;
-$couch->store($car);
-$car2->_delete = true;
-$couch->store($car2);
+
+
+
+$couch->delete($car);
+$couch->delete($car2);
+
+var_dump($car);
+var_dump($car2);
+
+
 
 class car
 {

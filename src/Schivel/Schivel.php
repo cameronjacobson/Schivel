@@ -45,4 +45,10 @@ class Schivel
 	public function fetch($id){
 		return $this->db->fetch($id);
 	}
+
+	public function delete(&$obj){
+		$obj->_delete = true;
+		$this->db->store($obj);
+		$obj = null;
+	}
 }

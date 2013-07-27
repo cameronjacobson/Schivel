@@ -6,6 +6,7 @@ trait SimpleQueries
 {
 	private $pagenum;
 	private $limit;
+	private $desc;
 
 	public function fetchIdByKey($view, $key){
 		$result = $this->simpleQuery([
@@ -228,6 +229,7 @@ trait SimpleQueries
 	private function cleanUp(){
 		$this->pagenum = null;
 		$this->limit = null;
+		$this->desc = null;
 	}
 
 	private function setQuery($query, $params){
@@ -236,6 +238,9 @@ trait SimpleQueries
 				'startkey'=>json_encode($params['startkey']),
 				'endkey'=>json_encode($params['endkey'])
 			);
+		}
+		if(isset($this->desc)){
+			$query['descending'] = $this->desc;
 		}
 		if(isset($params['include_docs'])){
 			$query['include_docs'] = $params['include_docs'];
@@ -268,6 +273,11 @@ trait SimpleQueries
 	public function page($pagenum, $limit){
 		$this->pagenum = (int)$pagenum;
 		$this->limit = (int)$limit;
+		return $this;
+	}
+
+	public function desc(){
+		$this->desc = 'true';
 		return $this;
 	}
 }

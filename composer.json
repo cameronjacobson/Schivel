@@ -7,6 +7,7 @@
         }
     ],
     "require": {
+        "php": ">=5.4.0",
         "phixd/phixd": "@dev",
         "phreezer/phreezer": "@dev"
     },

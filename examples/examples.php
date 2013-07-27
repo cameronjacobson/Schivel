@@ -25,8 +25,7 @@ $uuid2 = $couch->store($car2);
 
 echo <<<HEADER
 BY KEY EXAMPLES
---------------------------------
-
+--------------------------------\n
 HEADER;
 
 var_dump($couch->fetchDocByKey('car_by_uuid', $uuid));
@@ -43,8 +42,7 @@ var_dump($couch->page(2,1)->fetchDocstateByKey('car_by_owner', $car->owner));
 
 echo <<<HEADER
 BY KEYS EXAMPLES
---------------------------------
-
+--------------------------------\n
 HEADER;
 
 var_dump($couch->fetchDocByKeys('car_by_uuid', [$uuid]));
@@ -60,8 +58,7 @@ var_dump($couch->page(2,1)->fetchDocstateByKeys('car_by_owner', [$car->owner]));
 
 echo <<<HEADER
 BY RANGE EXAMPLES
---------------------------------
-
+--------------------------------\n
 HEADER;
 
 $startkey = min($uuid, $uuid2);

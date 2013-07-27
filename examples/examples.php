@@ -58,6 +58,27 @@ var_dump($couch->page(1,1)->fetchDocstateByKeys('car_by_owner', [$car->owner]));
 var_dump($couch->page(2,1)->fetchDocstateByKeys('car_by_owner', [$car->owner]));
 
 
+echo <<<HEADER
+BY RANGE EXAMPLES
+--------------------------------
+
+HEADER;
+
+$startkey = min($uuid, $uuid2);
+$endkey = max($uuid, $uuid2);
+
+var_dump($couch->fetchDocByRange('car_by_uuid', $startkey, $endkey));
+var_dump($couch->fetchDocstateByRange('car_by_uuid', $startkey, $endkey));
+var_dump($couch->fetchValueByRange('car_by_uuid', $startkey, $endkey));
+var_dump($couch->fetchIdByRange('car_by_uuid', $startkey, $endkey));
+var_dump($couch->fetchObjectByRange('car_by_uuid', $startkey, $endkey));
+var_dump($couch->fetchJsonByRange('car_by_uuid', $startkey, $endkey));
+
+var_dump($couch->page(1,1)->fetchDocstateByRange('car_by_owner', $car->owner, $car->owner));
+var_dump($couch->page(2,1)->fetchDocstateByRange('car_by_owner', $car->owner, $car->owner));
+var_dump($couch->page(1,2)->fetchDocstateByRange('car_by_owner', $car->owner, $car->owner));
+
+
 
 $car->_delete = true;
 $couch->store($car);

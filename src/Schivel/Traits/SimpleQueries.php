@@ -17,6 +17,17 @@ trait SimpleQueries
 		return $result;
 	}
 
+	public function fetchIdByRange($view, $startkey, $endkey){
+		$result = $this->simpleQuery([
+			'view'=>$view,
+			'filter'=>'id_only',
+			'startkey'=>$startkey,
+			'endkey'=>$endkey,
+			'format'=>'array'
+		]);
+		return $result;
+	}
+
 	public function fetchIdByKeys($view, array $keys){
 		$result = $this->simpleMultiQuery([
 			'view'=>$view,
@@ -32,6 +43,18 @@ trait SimpleQueries
 			'view'=>$view,
 			'filter'=>'doc_only',
 			'key'=>$key,
+			'include_docs' => 'true',
+			'format'=>'array'
+		]);
+		return $result;
+	}
+
+	public function fetchDocByRange($view, $startkey, $endkey){
+		$result = $this->simpleQuery([
+			'view'=>$view,
+			'filter'=>'doc_only',
+			'startkey'=>$startkey,
+			'endkey'=>$endkey,
 			'include_docs' => 'true',
 			'format'=>'array'
 		]);
@@ -60,6 +83,18 @@ trait SimpleQueries
 		return $result;
 	}
 
+	public function fetchDocstateByRange($view, $startkey, $endkey){
+		$result = $this->simpleQuery([
+			'view'         => $view,
+			'filter'       => 'docstate_only',
+			'startkey'=>$startkey,
+			'endkey'=>$endkey,
+			'include_docs' => 'true',
+			'format'=>'array'
+		]);
+		return $result;
+	}
+
 	public function fetchDocstateByKeys($view, array $keys){
 		$result = $this->simpleMultiQuery([
 			'view'=>$view,
@@ -76,6 +111,17 @@ trait SimpleQueries
 			'view'=>$view,
 			'filter'=>'value_only',
 			'key'=>$key,
+			'format'=>'array'
+		]);
+		return $result;
+	}
+
+	public function fetchValueByRange($view, $startkey, $endkey){
+		$result = $this->simpleQuery([
+			'view'=>$view,
+			'filter'=>'value_only',
+			'startkey'=>$startkey,
+			'endkey'=>$endkey,
 			'format'=>'array'
 		]);
 		return $result;
@@ -100,6 +146,16 @@ trait SimpleQueries
 		return $result;
 	}
 
+	public function fetchObjectByRange($view, $startkey, $endkey){
+		$result = $this->simpleQuery([
+			'view'=>$view,
+			'startkey'=>$startkey,
+			'endkey'=>$endkey,
+			'format'=>'thaw'
+		]);
+		return $result;
+	}
+
 	public function fetchObjectByKeys($view, array $keys){
 		$result = $this->simpleMultiQuery([
 			'view'=>$view,
@@ -113,6 +169,16 @@ trait SimpleQueries
 		$result = $this->simpleQuery([
 			'view'=>$view,
 			'key'=>$key,
+			'format'=>'json'
+		]);
+		return $result;
+	}
+
+	public function fetchJsonByRange($view, $startkey, $endkey){
+		$result = $this->simpleQuery([
+			'view'=>$view,
+			'startkey'=>$startkey,
+			'endkey'=>$endkey,
 			'format'=>'json'
 		]);
 		return $result;
@@ -134,7 +200,7 @@ trait SimpleQueries
 
 	private function simpleQuery($params){
 		$query = $this->setQuery(array(
-			'key'=>json_encode($params['key'])
+			'key'=> json_encode(empty($params['key']) ? '' : $params['key'])
 		), $params);
 		if(isset($params['include_docs'])){
 			$query['include_docs'] = $params['include_docs'];
@@ -149,7 +215,7 @@ trait SimpleQueries
 
 	private function simpleMultiQuery($params){
 		$query = $this->setQuery(array(
-			'keys'=>json_encode($params['keys'])
+			'keys'=> json_encode(empty($params['keys']) ? '' : $params['keys'])
 		),$params);
 		$result = $this->db->_view->query($params['view'], array(
 			'query'=>$query,
@@ -165,6 +231,12 @@ trait SimpleQueries
 	}
 
 	private function setQuery($query, $params){
+		if(isset($params['startkey'])){
+			$query = array(
+				'startkey'=>json_encode($params['startkey']),
+				'endkey'=>json_encode($params['endkey'])
+			);
+		}
 		if(isset($params['include_docs'])){
 			$query['include_docs'] = $params['include_docs'];
 		}

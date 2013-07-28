@@ -96,4 +96,4 @@ function E($val){
 	error_log(var_export($val,true));
 }
 
-echo 'MEMORY USAGE: '.memory_get_usage().PHP_EOL;
+echo 'MEMORY USAGE: '.memory_get_peak_usage(true).PHP_EOL;

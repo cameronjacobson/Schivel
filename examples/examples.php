@@ -23,6 +23,8 @@ $car2->owner = 'me';
 
 $uuid2 = $couch->store($car2);
 
+$start = microtime(true);
+
 echo <<<HEADER
 BY KEY EXAMPLES
 --------------------------------\n
@@ -81,7 +83,7 @@ var_dump($couch
 		->desc()
 		->fetchDocstateByRange('car_by_owner', $car->owner, $car->owner));
 
-
+echo 'FINISHED IN: '.(microtime(true)-$start).' SECONDS'.PHP_EOL;
 
 
 $couch->delete($car);

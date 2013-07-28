@@ -7,6 +7,7 @@ trait SimpleQueries
 	private $pagenum;
 	private $limit;
 	private $desc;
+	private $async;
 
 	public function fetchIdByKey($view, $key){
 		$result = $this->simpleQuery([
@@ -195,6 +196,9 @@ trait SimpleQueries
 	}
 
 	public function isDuplicate($view, $key){
+		if(!empty($this->async)){
+			throw new Exception('Invalid method "isDuplicate" while in async mode');
+		}
 		$result = $this->fetchIdByKey($view, $key);
 		return count($result) > 0;
 	}
@@ -206,10 +210,20 @@ trait SimpleQueries
 		if(isset($params['include_docs'])){
 			$query['include_docs'] = $params['include_docs'];
 		}
-		$result = $this->db->_view->query($params['view'], array(
-			'query'=>$query,
-			'opts'=>$this->setOptions($params)
-		));
+		if($this->async){
+			$this->db->_view->async($params['view'], array(
+				'query'=>$query,
+				'opts'=>$this->setOptions($params)
+			));
+			$this->cleanUp();
+			return $this;
+		}
+		else{
+			$result = $this->db->_view->query($params['view'], array(
+				'query'=>$query,
+				'opts'=>$this->setOptions($params)
+			));
+		}
 		$this->cleanUp();
 		return is_string($result) ? $result : (empty($result['rows']) ? $result : $result['rows']);
 	}
@@ -218,12 +232,31 @@ trait SimpleQueries
 		$query = $this->setQuery(array(
 			'keys'=> json_encode(empty($params['keys']) ? '' : $params['keys'])
 		),$params);
-		$result = $this->db->_view->query($params['view'], array(
-			'query'=>$query,
-			'opts'=>$this->setOptions($params)
-		));
+		if($this->async){
+			$this->db->_view->async($params['view'], array(
+				'query'=>$query,
+				'opts'=>$this->setOptions($params)
+			));
+			$this->cleanUp();
+			return $this;
+		}
+		else{
+			$result = $this->db->_view->query($params['view'], array(
+				'query'=>$query,
+				'opts'=>$this->setOptions($params)
+			));
+		}
 		$this->cleanUp();
 		return is_string($result) ? $result : (empty($result['rows']) ? $result : $result['rows']);
+	}
+
+	public function fetchViews(){
+		$this->db->_view->fetch();
+		$this->async = null;
+	}
+
+	public function getBuffers(){
+		return $this->db->_view->getBuffers();
 	}
 
 	private function cleanUp(){
@@ -275,7 +308,10 @@ trait SimpleQueries
 		$this->limit = (int)$limit;
 		return $this;
 	}
-
+	public function async(){
+		$this->async = true;
+		return $this;
+	}
 	public function desc(){
 		$this->desc = 'true';
 		return $this;

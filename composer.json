@@ -10,7 +10,8 @@
         "php": ">=5.4.0",
         "ext-event": "*",
         "phixd/phixd": "@dev",
-        "phreezer/phreezer": "@dev"
+        "phreezer/phreezer": "@dev",
+        "datashovel/simplehttpclient": "1.0.*@dev"
     },
 	"autoload": {
 		"psr-0": {

@@ -106,3 +106,5 @@ class car
 function E($val){
 	error_log(var_export($val,true));
 }
+
+echo 'MEMORY USAGE: '.memory_get_usage().PHP_EOL;

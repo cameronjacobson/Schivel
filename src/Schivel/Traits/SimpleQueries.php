@@ -265,6 +265,10 @@ trait SimpleQueries
 		$this->desc = null;
 	}
 
+	public function flush(){
+		$this->db->_view->flush();
+	}
+
 	private function setQuery($query, $params){
 		if(isset($params['startkey'])){
 			$query = array(

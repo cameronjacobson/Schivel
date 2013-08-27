@@ -42,6 +42,10 @@ class Schivel
 		return $this->db->store($object);
 	}
 
+	public function getId(){
+		return $this->db->getId();		
+	}
+
 	public function fetch($id){
 		return $this->db->fetch($id);
 	}

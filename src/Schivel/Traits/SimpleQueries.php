@@ -247,7 +247,7 @@ trait SimpleQueries
 			));
 		}
 		$this->cleanUp();
-		return is_string($result) ? $result : (isset($result['rows']) ? $result : $result['rows']);
+		return is_string($result) ? $result : (isset($result['rows']) ? $result['rows'] : $result);
 	}
 
 	public function fetchViews(){

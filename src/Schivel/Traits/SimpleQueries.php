@@ -204,9 +204,6 @@ trait SimpleQueries
 	}
 
 	private function simpleQuery($params){
-		if($this->db->getBase()->gotExit()){
-			$this->db->getBase()->reInit();
-		}
 		$query = $this->setQuery(array(
 			'key'=> json_encode(empty($params['key']) ? '' : $params['key'])
 		), $params);

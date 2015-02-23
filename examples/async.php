@@ -6,6 +6,7 @@ use Schivel\Schivel;
 use Phreezer\Storage\CouchDB;
 
 $couch = new Schivel(new CouchDB([
+	'host'=>'datashovel_couchdb',
 	'database'=>'schivel_test'
 ]));
 
@@ -63,6 +64,9 @@ $couch->async()
  ->fetchViews();
 
 
+$buffers = $couch->getBuffers();
+var_dump($buffers);
+
 echo 'FINISHED IN: '.(microtime(true)-$start).' SECONDS'.PHP_EOL;
 
 /*
@@ -70,14 +74,10 @@ echo 'FINISHED IN: '.(microtime(true)-$start).' SECONDS'.PHP_EOL;
  ->isDuplicate('car_by_owner', $car->owner)
 */
 
-sleep(5);
-
-$buffers = $couch->getBuffers();
-var_dump($buffers);
-
 $couch->delete($car);
 $couch->delete($car2);
 
+echo 'car objects have been deleted'.PHP_EOL;
 var_dump($car);
 var_dump($car2);
 

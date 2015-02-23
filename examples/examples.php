@@ -86,6 +86,7 @@ var_dump($couch
 
 echo 'FINISHED IN: '.(microtime(true)-$start).' SECONDS'.PHP_EOL;
 
+$couch->getContext();
 $couch->delete($car);
 $couch->delete($car2);
 

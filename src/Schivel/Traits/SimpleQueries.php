@@ -204,6 +204,9 @@ trait SimpleQueries
 	}
 
 	private function simpleQuery($params){
+		if($this->db->getBase()->gotExit()){
+			$this->db->getBase()->reInit();
+		}
 		$query = $this->setQuery(array(
 			'key'=> json_encode(empty($params['key']) ? '' : $params['key'])
 		), $params);
@@ -211,7 +214,7 @@ trait SimpleQueries
 			$query['include_docs'] = $params['include_docs'];
 		}
 		if($this->async){
-			$this->db->_view->async($params['view'], array(
+			$this->db->getViewService()->async($params['view'], array(
 				'query'=>$query,
 				'opts'=>$this->setOptions($params)
 			));
@@ -219,7 +222,7 @@ trait SimpleQueries
 			return $this;
 		}
 		else{
-			$result = $this->db->_view->query($params['view'], array(
+			$result = $this->db->getViewService()->query($params['view'], array(
 				'query'=>$query,
 				'opts'=>$this->setOptions($params)
 			));
@@ -233,7 +236,7 @@ trait SimpleQueries
 			'keys'=> json_encode(empty($params['keys']) ? '' : $params['keys'])
 		),$params);
 		if($this->async){
-			$this->db->_view->async($params['view'], array(
+			$this->db->getViewService()->async($params['view'], array(
 				'query'=>$query,
 				'opts'=>$this->setOptions($params)
 			));
@@ -241,7 +244,7 @@ trait SimpleQueries
 			return $this;
 		}
 		else{
-			$result = $this->db->_view->query($params['view'], array(
+			$result = $this->db->getViewService()->query($params['view'], array(
 				'query'=>$query,
 				'opts'=>$this->setOptions($params)
 			));
@@ -250,13 +253,18 @@ trait SimpleQueries
 		return is_string($result) ? $result : (isset($result['rows']) ? $result['rows'] : $result);
 	}
 
+	public function dispatchViews(callable $fn){
+		$this->async = null;
+		$this->db->getViewService()->dispatch($fn);
+	}
+
 	public function fetchViews(){
-		$this->db->_view->fetch();
+		$this->db->getViewService()->fetch();
 		$this->async = null;
 	}
 
 	public function getBuffers(){
-		return $this->db->_view->getBuffers();
+		return $this->db->getViewService()->getBuffers();
 	}
 
 	private function cleanUp(){
@@ -266,7 +274,7 @@ trait SimpleQueries
 	}
 
 	public function flush(){
-		$this->db->_view->flush();
+		$this->db->getViewService()->flush();
 	}
 
 	private function setQuery($query, $params){

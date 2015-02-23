@@ -11,7 +11,12 @@ class Schivel
 	private $db;
 
 	public function __construct(CouchDB $db){
-		$this->db = $db;
+		$this->couch = $db;
+		$this->db = $db->getContext();
+	}
+
+	public function setDebug($debug){
+		return $this->db->setDebug($debug);
 	}
 
 	public function setDatabase($database){
@@ -38,21 +43,25 @@ class Schivel
 		$this->db->pass = $pass;
 	}
 
-	public function store($object){
-		return $this->db->store($object);
+	public function store($object, callable $fn = null){
+		return $this->db->store($object, $fn);
 	}
 
 	public function getId(){
 		return $this->db->getId();		
 	}
 
-	public function fetch($id){
-		return $this->db->fetch($id);
+	public function fetch($id, callable $fn = null){
+		return $this->db->fetch($id, $fn);
 	}
 
-	public function delete(&$obj){
+	public function getContext(){
+		$this->db = $this->couch->getContext();
+	}
+
+	public function delete(&$obj, callable $fn = null){
 		$obj->_delete = true;
-		$this->db->store($obj);
+		$this->db->store($obj, $fn);
 		$obj = null;
 	}
 }

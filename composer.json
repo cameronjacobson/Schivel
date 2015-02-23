@@ -1,18 +1,26 @@
 {
 	"name":"schivel/schivel",
-    "repositories": [
-        {  
-            "type":"git",
-            "url":"https://github.com/cameronjacobson/Phreezer.git"
-        }
-    ],
-    "require": {
-        "php": ">=5.4.0",
-        "ext-event": "*",
-        "phixd/phixd": "@dev",
-        "phreezer/phreezer": "@dev",
-        "datashovel/simplehttpclient": "1.0.*@dev"
-    },
+	"repositories": [
+		{
+			"type":"git",
+			"url":"https://github.com/cameronjacobson/Phreezer.git"
+		},
+		{
+			"type":"git",
+			"url":"https://github.com/cameronjacobson/Phixd.git"
+		},
+		{
+			"type":"git",
+			"url":"https://github.com/cameronjacobson/SimpleHttpClient.git"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0",
+		"ext-event": "*",
+		"phixd/phixd": "*@dev",
+		"phreezer/phreezer": "*@dev",
+		"datashovel/simplehttpclient": "*@dev"
+	},
 	"autoload": {
 		"psr-0": {
 			"Schivel": "src/"

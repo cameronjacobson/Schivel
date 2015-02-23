@@ -6,6 +6,7 @@ use Schivel\Schivel;
 use Phreezer\Storage\CouchDB;
 
 $couch = new Schivel(new CouchDB([
+	'host'=>'datashovel_couchdb',
 	'database'=>'schivel_test'
 ]));
 
@@ -84,7 +85,6 @@ var_dump($couch
 		->fetchDocstateByRange('car_by_owner', $car->owner, $car->owner));
 
 echo 'FINISHED IN: '.(microtime(true)-$start).' SECONDS'.PHP_EOL;
-
 
 $couch->delete($car);
 $couch->delete($car2);

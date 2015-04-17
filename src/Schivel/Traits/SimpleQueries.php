@@ -171,6 +171,7 @@ trait SimpleQueries
 		$result = $this->simpleQuery([
 			'view'=>$view,
 			'key'=>$key,
+			'include_docs' => 'true',
 			'format'=>'json'
 		]);
 		return $result;
@@ -181,6 +182,7 @@ trait SimpleQueries
 			'view'=>$view,
 			'startkey'=>$startkey,
 			'endkey'=>$endkey,
+			'include_docs' => 'true',
 			'format'=>'json'
 		]);
 		return $result;
@@ -190,6 +192,7 @@ trait SimpleQueries
 		$result = $this->simpleMultiQuery([
 			'view'=>$view,
 			'keys'=>$keys,
+			'include_docs' => 'true',
 			'format'=>'json'
 		]);
 		return $result;
